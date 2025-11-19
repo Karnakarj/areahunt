@@ -10,12 +10,13 @@ interface AIAssistantProps {
 
 const AIAssistant: React.FC<AIAssistantProps> = ({ currentLocation, isOpen, onClose }) => {
   const [messages, setMessages] = useState<ChatMessage[]>([
-    { role: 'model', text: "Hi! I'm your AreaHunt assistant. Ask me about nearby amenities, safety, or transport!" }
+    { role: 'model', text: "Hi! I'm AreaHunt AI. I can help you explore. Try asking 'What is this building?' or 'Are there shops nearby?'" }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  // Auto-scroll to bottom
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -39,87 +40,68 @@ const AIAssistant: React.FC<AIAssistantProps> = ({ currentLocation, isOpen, onCl
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-gray-900/90 z-50 flex flex-col sm:w-[400px] sm:right-0 sm:left-auto sm:border-l sm:border-gray-700 transition-all duration-300">
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-700 bg-gray-800">
-        <h3 className="font-bold text-lg text-blue-400 flex items-center gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-          </svg>
-          Area AI
-        </h3>
-        <button onClick={onClose} className="p-2 hover:bg-gray-700 rounded-full text-gray-400">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-      </div>
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center sm:justify-center pointer-events-none">
+      {/* Backdrop */}
+      <div className="absolute inset-0 bg-black/50 pointer-events-auto" onClick={onClose}></div>
 
-      {/* Chat Area */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-hide" ref={scrollRef}>
-        {messages.map((msg, idx) => (
-          <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-            <div className={`max-w-[85%] p-3 rounded-2xl text-sm ${
-              msg.role === 'user' 
-                ? 'bg-blue-600 text-white rounded-br-none' 
-                : 'bg-gray-700 text-gray-200 rounded-bl-none'
-            }`}>
-              <p>{msg.text}</p>
-              {msg.groundingUrls && msg.groundingUrls.length > 0 && (
-                <div className="mt-3 pt-2 border-t border-gray-600">
-                  <p className="text-xs text-gray-400 mb-1">Sources:</p>
-                  <ul className="space-y-1">
-                    {msg.groundingUrls.map((url, uIdx) => (
-                      <li key={uIdx}>
-                        <a 
-                          href={url.uri} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="text-blue-300 text-xs hover:underline flex items-center gap-1"
-                        >
-                           <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                          </svg>
-                          {url.title || 'Source Link'}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
+      {/* Chat Window */}
+      <div className="bg-gray-900 w-full sm:w-[400px] h-[80dvh] sm:h-[600px] rounded-t-3xl sm:rounded-3xl flex flex-col overflow-hidden pointer-events-auto relative shadow-2xl transform transition-transform duration-300">
+        
+        {/* Header */}
+        <div className="bg-gray-800 p-4 flex justify-between items-center border-b border-gray-700">
+          <div className="flex items-center gap-2">
+            <span className="text-2xl">✨</span>
+            <h3 className="font-bold text-white">Area Assistant</h3>
           </div>
-        ))}
-        {isLoading && (
-           <div className="flex justify-start">
-             <div className="bg-gray-700 p-3 rounded-2xl rounded-bl-none flex items-center gap-1">
-               <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0s'}}></div>
-               <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s'}}></div>
-               <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s'}}></div>
-             </div>
-           </div>
-        )}
-      </div>
+          <button onClick={onClose} className="bg-gray-700 p-2 rounded-full text-gray-300 hover:text-white">✕</button>
+        </div>
 
-      {/* Input Area */}
-      <div className="p-4 bg-gray-800 border-t border-gray-700">
-        <div className="flex items-center gap-2">
+        {/* Messages */}
+        <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-hide bg-gray-900" ref={scrollRef}>
+          {messages.map((msg, idx) => (
+            <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+              <div className={`max-w-[85%] p-3 rounded-2xl text-sm leading-relaxed ${
+                msg.role === 'user' 
+                  ? 'bg-blue-600 text-white rounded-br-none' 
+                  : 'bg-gray-800 text-gray-200 rounded-bl-none border border-gray-700'
+              }`}>
+                <p>{msg.text}</p>
+                {/* Links/Grounding */}
+                {msg.groundingUrls && msg.groundingUrls.length > 0 && (
+                    <div className="mt-2 pt-2 border-t border-gray-600 flex flex-col gap-1">
+                        {msg.groundingUrls.map((url, i) => (
+                            <a key={i} href={url.uri} target="_blank" rel="noreferrer" className="text-xs text-blue-400 truncate block hover:underline">
+                                🔗 {url.title || 'Map Link'}
+                            </a>
+                        ))}
+                    </div>
+                )}
+              </div>
+            </div>
+          ))}
+          {isLoading && (
+             <div className="flex justify-start animate-pulse">
+                <div className="bg-gray-800 px-4 py-2 rounded-2xl rounded-bl-none text-gray-400 text-xs">Thinking...</div>
+             </div>
+          )}
+        </div>
+
+        {/* Input */}
+        <div className="p-3 bg-gray-800 border-t border-gray-700 flex gap-2">
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-            placeholder="e.g., 'Where is the nearest coffee shop?'"
-            className="flex-1 bg-gray-900 text-white border border-gray-600 rounded-full px-4 py-3 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm"
+            onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+            placeholder="Ask about this area..."
+            className="flex-1 bg-gray-900 text-white rounded-full px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button 
             onClick={handleSend}
+            className="bg-blue-600 text-white p-3 rounded-full hover:bg-blue-500 disabled:opacity-50"
             disabled={isLoading}
-            className={`p-3 rounded-full bg-blue-600 text-white shadow-lg ${isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-500'}`}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
-            </svg>
+            ➤
           </button>
         </div>
       </div>
