@@ -2,113 +2,48 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    <meta name="theme-color" content="#111827" />
-    
-    <!-- PWA Setup -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="mobile-web-app-capable" content="yes">
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AreaHunt</title>
-    <link rel="manifest" href="/manifest.json">
-    
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-     crossorigin=""/>
-     
-    <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-     crossorigin=""></script>
-
-    <!-- Babel Standalone for running TSX in browser -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-     
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""/>
     <style>
-        html, body, #root {
-            height: 100%;
-            width: 100%;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            overscroll-behavior: none;
-            touch-action: none; /* Prevent browser bounce */
-            background-color: #e5e7eb;
-        }
-        .leaflet-container {
-            background: #e5e7eb;
-            width: 100%;
-            height: 100%;
-        }
-        /* Hide attribution for cleaner mobile look (optional, keep legal if public) */
-        .leaflet-control-attribution {
-            font-size: 8px;
-            opacity: 0.5;
-        }
-        @keyframes fade-in {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        .animate-fade-in {
-            animation: fade-in 0.2s ease-out forwards;
-        }
-        .pb-safe { padding-bottom: env(safe-area-inset-bottom, 20px); }
-        .pt-safe { padding-top: env(safe-area-inset-top, 20px); }
-        
-        /* Custom Scrollbar hide */
-        .scrollbar-hide::-webkit-scrollbar {
-            display: none;
-        }
-        .scrollbar-hide {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
+      /* Basic resets and body styles */
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+          'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+          sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        overflow: hidden; /* Prevent scrollbars on the body */
+      }
+      /* Ensures the map container fills the entire screen */
+      .leaflet-container {
+        height: 100vh;
+        width: 100vw;
+        z-index: 0;
+      }
     </style>
   <script type="importmap">
 {
   "imports": {
-    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
-    "react-dom": "https://esm.sh/react-dom@18.2.0",
-    "@google/genai": "https://esm.sh/@google/genai@0.1.1",
-    "react": "https://esm.sh/react@18.2.0",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
     "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
-    "react/": "https://aistudiocdn.com/react@^19.2.0/"
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "leaflet": "https://aistudiocdn.com/leaflet@^1.9.4",
+    "react-leaflet": "https://aistudiocdn.com/react-leaflet@^5.0.0"
   }
 }
 </script>
-<script>
-    // --- IMPORTANT: API KEY SETUP ---
-    // If you are just testing, you can put the key here.
-    // For a real public app, you usually need a backend, but for GitHub Pages prototype:
-    window.process = {
-        env: {
-            // PASTE YOUR GEMINI API KEY INSIDE THE QUOTES BELOW
-            API_KEY: 'YOUR_API_KEY_HERE' 
-        }
-    };
-</script>
+<!-- Add Babel to transpile JSX/TSX in the browser -->
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
-  <body class="bg-gray-900 text-white antialiased">
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
-    
-    <!-- Main App Scripts -->
-    <script type="text/babel" data-type="module" data-presets="react,typescript" src="/index.tsx"></script>
-    
-    <!-- Service Worker Registration -->
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
-          navigator.serviceWorker.register('/sw.js').then(function(registration) {
-            console.log('ServiceWorker registration successful');
-          }, function(err) {
-            console.log('ServiceWorker registration failed: ', err);
-          });
-        });
-      }
-    </script>
+    <!-- Load and transpile the main React component -->
+    <script type="text/babel" data-type="module" src="index.tsx"></script>
   </body>
 </html>
