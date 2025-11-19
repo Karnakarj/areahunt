@@ -14,8 +14,8 @@ export const MarkerPinIcon = () => (
     </svg>
 );
 
-export const UserLocationIcon = (
+export const UserLocationIconString = `
     <svg viewBox="0 0 24 41" fill="currentColor" height="41" width="24">
         <path d="M12 0C7.3 0 3.5 3.8 3.5 8.5c0 8.7 8.5 21.2 8.5 21.2s8.5-12.5 8.5-21.2C20.5 3.8 16.7 0 12 0zm0 12.5c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4z" />
     </svg>
-);
+`;
