@@ -1,5 +1,4 @@
-
-const CACHE_NAME = 'areahunt-v1';
+const CACHE_NAME = 'areahunt-v2';
 const urlsToCache = [
   '/',
   '/index.html',
