@@ -1,6 +1,6 @@
 {
   "name": "AreaHunt",
-  "description": "A smart exploration assistant that tracks your path and helps you find properties in new areas.",
+  "description": "AreaHunt helps you explore new areas by tracking your path on a map. It marks the streets you've visited, so you can search efficiently without getting lost or repeating your steps. You can also drop markers for important locations to remember later.",
   "requestFramePermissions": [
     "geolocation"
   ]
