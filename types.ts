@@ -13,13 +13,6 @@ export interface SavedMarker {
   timestamp: number;
 }
 
-export interface AppState {
-  isTracking: boolean;
-  currentPath: Coordinate[];
-  savedPaths: Coordinate[][]; // History of previous walks
-  markers: SavedMarker[];
-}
-
 export interface ChatMessage {
   role: 'user' | 'model';
   text: string;
