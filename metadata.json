@@ -1,0 +1,7 @@
+{
+  "name": "AreaHunt",
+  "description": "A smart exploration assistant that tracks your path and helps you find properties in new areas.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
