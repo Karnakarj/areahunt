@@ -12,8 +12,10 @@ export const StorageService = {
   },
 
   loadCurrentPath: (): Coordinate[] => {
-    const data = localStorage.getItem(KEYS.CURRENT_PATH);
-    return data ? JSON.parse(data) : [];
+    try {
+        const data = localStorage.getItem(KEYS.CURRENT_PATH);
+        return data ? JSON.parse(data) : [];
+    } catch (e) { return []; }
   },
 
   saveMarkers: (markers: SavedMarker[]) => {
@@ -21,26 +23,29 @@ export const StorageService = {
   },
 
   loadMarkers: (): SavedMarker[] => {
-    const data = localStorage.getItem(KEYS.MARKERS);
-    return data ? JSON.parse(data) : [];
+    try {
+        const data = localStorage.getItem(KEYS.MARKERS);
+        return data ? JSON.parse(data) : [];
+    } catch (e) { return []; }
   },
 
   // When a session ends, move current path to history
   archiveCurrentPath: () => {
     const current = StorageService.loadCurrentPath();
-    if (current.length === 0) return;
+    if (current.length < 2) return; // Don't save single dots
 
-    const historyData = localStorage.getItem(KEYS.SAVED_PATHS);
-    const history: Coordinate[][] = historyData ? JSON.parse(historyData) : [];
-    
+    const history = StorageService.loadHistory();
     history.push(current);
+    
     localStorage.setItem(KEYS.SAVED_PATHS, JSON.stringify(history));
     localStorage.removeItem(KEYS.CURRENT_PATH);
   },
 
   loadHistory: (): Coordinate[][] => {
-    const data = localStorage.getItem(KEYS.SAVED_PATHS);
-    return data ? JSON.parse(data) : [];
+    try {
+        const data = localStorage.getItem(KEYS.SAVED_PATHS);
+        return data ? JSON.parse(data) : [];
+    } catch (e) { return []; }
   },
   
   clearAll: () => {
